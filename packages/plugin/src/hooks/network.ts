@@ -112,7 +112,7 @@ async function validateReownChainId(networkConnection: NetworkConnection<any>) {
   const hardhatChainId = BigInt(hardhatChainIdHex);
   if (reownChainId !== hardhatChainId) {
     console.log(
-      `switching reown chain id to ${Number(hardhatChainId)} (hex ${hardhatChainIdHex})`,
+      `switching Reown chain id to ${Number(hardhatChainId)} (hex ${hardhatChainIdHex})`,
     );
     await sendJsonRpcRequestToReown({
       jsonrpc: "2.0",
@@ -135,7 +135,7 @@ async function validateReownChainId(networkConnection: NetworkConnection<any>) {
 
   if (reownChainIdAfterUpdate !== hardhatChainId) {
     throw new Error(
-      `Chain ID mismatch: ${reownChainIdAfterUpdate} (reown) !== ${hardhatChainId} (hardhat)`,
+      `Chain ID mismatch: ${reownChainIdAfterUpdate} (Reown) !== ${hardhatChainId} (Hardhat)`,
     );
   }
 }

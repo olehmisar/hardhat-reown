@@ -56,7 +56,7 @@ async function sendJsonRpcRequest(
 ): Promise<JsonRpcResponse["result"]> {
   if (!activeClient || activeClient.readyState !== WebSocket.OPEN) {
     console.log(
-      "Waiting for reown tab to connect. Visit http://localhost:9293 to connect.",
+      "Waiting for a Reown tab to connect. Visit http://localhost:9293 to connect.",
     );
     while (!activeClient || activeClient.readyState !== WebSocket.OPEN) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -73,11 +73,13 @@ async function sendJsonRpcRequest(
 }
 
 wss.on("connection", (ws) => {
-  if (activeClient && activeClient !== ws) {
-    activeClient.close(1000, "New connection established");
+  if (activeClient) {
+    ws.close(1000, "A Reown tab is already connected");
+    return;
   }
+
   activeClient = ws;
-  console.log("A new reown tab connected. Previous connections closed.");
+  console.log("Reown tab connected");
 
   ws.on("message", (message) => {
     try {
@@ -92,11 +94,12 @@ wss.on("connection", (ws) => {
     }
   });
 
-  ws.on("close", () => {
+  ws.on("close", async () => {
     if (activeClient === ws) {
       activeClient = null;
     }
     console.log("Reown tab has disconnected.");
+    await closeServer();
   });
 });
 
