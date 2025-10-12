@@ -5,6 +5,5 @@ export default defineConfig({
   plugins: [viteSingleFile()],
   build: {
     outDir: "dist-client",
-    minify: false,
   },
 });
