@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 
 import express from "express";
 import { JsonRpcRequest, JsonRpcResponse } from "hardhat/types/providers";
+import open from "open";
 import { WebSocket, WebSocketServer } from "ws";
 import { SERVER_PORT } from "./port.js";
 
@@ -13,6 +14,7 @@ const server = http.createServer(app);
 const wss = new WebSocketServer({ server });
 
 const port = SERVER_PORT;
+const browserUrl = `http://localhost:${port}`;
 
 let activeClient: WebSocket | null = null;
 const pendingRequests = new Map<
@@ -42,8 +44,9 @@ async function sendJsonRpcRequest(
 ): Promise<JsonRpcResponse> {
   if (!activeClient || activeClient.readyState !== WebSocket.OPEN) {
     console.log(
-      `Waiting for a Reown tab to connect. Visit http://localhost:${SERVER_PORT} to connect.`,
+      `Waiting for a Reown tab to connect. Visit ${browserUrl} to connect.`,
     );
+    await open(browserUrl);
     while (!activeClient || activeClient.readyState !== WebSocket.OPEN) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
@@ -91,9 +94,7 @@ wss.on("connection", (ws) => {
 
 server
   .listen(port, () => {
-    console.log(
-      `HTTP and WebSocket server running on http://localhost:${port}`,
-    );
+    console.log(`HTTP and WebSocket server running on ${browserUrl}`);
   })
   .unref(); // exit the process when hardhat tasks are finished
 

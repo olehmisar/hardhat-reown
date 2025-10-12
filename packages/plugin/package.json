@@ -1,6 +1,6 @@
 {
   "name": "hardhat-reown",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Hardhat Reown plugin",
   "type": "module",
   "types": "dist/src/index.d.ts",
@@ -73,6 +73,7 @@
   "dependencies": {
     "express": "^5.1.0",
     "lodash-es": "^4.17.21",
+    "open": "^10.2.0",
     "ws": "^8.18.3"
   }
 }
