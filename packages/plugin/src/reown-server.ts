@@ -87,9 +87,6 @@ wss.on("connection", (ws) => {
     console.log("Reown tab has disconnected.");
     await closeServer();
   });
-
-  // @ts-expect-error
-  ws._socket.unref(); // exit the process when hardhat tasks are finished
 });
 
 server
