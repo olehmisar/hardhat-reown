@@ -1,3 +1,4 @@
+import fs from "node:fs";
 import http from "node:http";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -38,12 +39,14 @@ const pendingRequests = new Map<
 
 // Serve the single index.html file
 app.get("/", (req, res) => {
-  res.sendFile(
+  const file = fs.readFileSync(
     path.join(
       fileURLToPath(import.meta.url),
       "../../../dist-client/index.html",
     ),
+    "utf8",
   );
+  res.send(file);
 });
 
 /**
