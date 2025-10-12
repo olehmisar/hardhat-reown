@@ -1,0 +1,71 @@
+{
+  "name": "hardhat-reown",
+  "version": "0.0.1",
+  "description": "Hardhat Reown plugin",
+  "type": "module",
+  "types": "dist/src/index.d.ts",
+  "exports": {
+    ".": "./dist/src/index.js"
+  },
+  "keywords": [
+    "ethereum",
+    "smart-contracts",
+    "reown",
+    "hardhat",
+    "hardhat3",
+    "hardhat-plugin"
+  ],
+  "scripts": {
+    "lint": "pnpm prettier --check && pnpm eslint",
+    "lint:fix": "pnpm prettier --write && pnpm eslint --fix",
+    "eslint": "eslint \"src/**/*.ts\" \"test/**/*.ts\"",
+    "prettier": "prettier \"**/*.{ts,js,md,json}\"",
+    "test": "node --import tsx/esm --test --test-reporter=@nomicfoundation/hardhat-node-test-reporter \"test/*.ts\" \"test/!(fixture-projects|helpers)/**/*.ts\"",
+    "test:only": "node --import tsx/esm --test --test-only --test-reporter=@nomicfoundation/hardhat-node-test-reporter \"test/*.ts\" \"test/!(fixture-projects|helpers)/**/*.ts\"",
+    "test:coverage": "c8 --reporter html --reporter text --all --exclude test --exclude \"src/**/{types,type-extensions}.ts\" --src src node --import tsx/esm --test --test-reporter=@nomicfoundation/hardhat-node-test-reporter \"test/*.ts\" \"test/!(fixture-projects|helpers)/**/*.ts\"",
+    "pretest": "pnpm build",
+    "pretest:only": "pnpm build",
+    "build": "tsc --build . && vite build",
+    "prepublishOnly": "pnpm build",
+    "clean": "rimraf dist & rimraf dist-client",
+    "watch": "tsc --build . --watch & vite build --watch"
+  },
+  "files": [
+    "dist/src/",
+    "dist-client/",
+    "src/",
+    "CHANGELOG.md",
+    "README.md"
+  ],
+  "devDependencies": {
+    "@eslint/js": "^9.35.0",
+    "@nomicfoundation/hardhat-node-test-reporter": "^3.0.0",
+    "@reown/appkit": "^1.8.6",
+    "@tsconfig/node22": "^22.0.2",
+    "@types/express": "^5.0.3",
+    "@types/lodash-es": "^4.17.12",
+    "@types/node": "^22.11.0",
+    "@types/ws": "^8.18.1",
+    "c8": "^9.1.0",
+    "eslint": "^9.35.0",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import": "^2.32.0",
+    "hardhat": "^3.0.6",
+    "prettier": "3.2.5",
+    "rimraf": "^5.0.5",
+    "tsx": "^4.19.3",
+    "typescript": "~5.8.0",
+    "typescript-eslint": "^8.43.0",
+    "viem": "^2.37.6",
+    "vite": "^7.1.9",
+    "vite-plugin-singlefile": "^2.3.0"
+  },
+  "peerDependencies": {
+    "hardhat": "^3.0.6"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "lodash-es": "^4.17.21",
+    "ws": "^8.18.3"
+  }
+}

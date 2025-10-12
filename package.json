@@ -1,0 +1,12 @@
+{
+  "name": "@repo/monorepo",
+  "private": true,
+  "scripts": {
+    "build": "pnpm --recursive build",
+    "clean": "pnpm --recursive clean",
+    "lint": "pnpm --recursive lint",
+    "lint:fix": "pnpm --recursive lint:fix",
+    "test": "pnpm --recursive test",
+    "watch": "pnpm --filter ./packages/plugin watch"
+  }
+}

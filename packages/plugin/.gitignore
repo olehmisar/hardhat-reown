@@ -1,0 +1,13 @@
+# Node modules
+/node_modules
+
+# Compilation output
+/dist
+/dist-client
+
+# test coverage output
+/coverage
+
+# Hardhat files
+/artifacts
+/cache
