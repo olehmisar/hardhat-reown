@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>JSON-RPC over WebSocket</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 20px;
+      }
+      #log {
+        list-style-type: none;
+        padding: 0;
+      }
+      #log li {
+        padding: 8px;
+        border-bottom: 1px solid #ddd;
+      }
+      .connection-status {
+        font-size: 2em;
+        font-weight: bold;
+        color: red;
+        display: none; /* Initially hidden */
+        margin-top: 20px;
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        background: white;
+        border-bottom: 2px solid #ddd;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Hardhat Reown</h1>
+      <appkit-button></appkit-button>
+      <div class="connection-status">Connection Closed!</div>
+    </header>
+    <ul id="log"></ul>
+    <div class="connection-status">Connection Closed!</div>
+
+    <script type="module" src="./index.ts"></script>
+  </body>
+</html>

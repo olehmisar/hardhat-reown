@@ -42,7 +42,7 @@ app.get("/", (req, res) => {
   const file = fs.readFileSync(
     path.join(
       fileURLToPath(import.meta.url),
-      "../../../dist-client/index.html",
+      "../../../dist-client/src/client/index.html",
     ),
     "utf8",
   );
