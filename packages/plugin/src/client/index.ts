@@ -1,7 +1,8 @@
 import { createAppKit } from "@reown/appkit";
+import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
 import type { AppKitNetwork } from "@reown/appkit/networks";
 import type { JsonRpcRequest } from "hardhat/types/providers";
-import * as networks from "viem/chains";
+import * as networksMap from "viem/chains";
 import { SERVER_PORT } from "../port.js";
 
 const logList = document.getElementById("log")!;
@@ -100,12 +101,20 @@ const getModal = lazyValue(async () => {
     icons: ["https://avatars.githubusercontent.com/u/179229932"],
   };
 
+  const networks = Object.values(networksMap) as unknown as [
+    AppKitNetwork,
+    ...AppKitNetwork[],
+  ];
+  const wagmiAdapter = new WagmiAdapter({
+    projectId,
+    networks,
+  });
+
   // 3. Create a AppKit instance
   const modal = createAppKit({
-    networks: Object.values(networks) as unknown as [
-      AppKitNetwork,
-      ...AppKitNetwork[],
-    ],
+    adapters: [wagmiAdapter],
+    networks,
+    enableCoinbase: true,
     metadata,
     projectId,
     features: {
@@ -120,6 +129,9 @@ const getModal = lazyValue(async () => {
     await new Promise((resolve) => setTimeout(resolve, 100));
   } while (!account?.isConnected || !account.address);
   console.log("got account", account);
+
+  const provider: any = modal.getProvider(reownNamespace);
+  await provider.request({ method: "eth_requestAccounts" }); // otherwise, Coinbase wallet fails with "Must call 'eth_requestAccounts' before other methods"
 
   return modal;
 });
@@ -169,10 +181,9 @@ ws.onmessage = async (event) => {
       `✅ Response sent for ${rpcRequest.method}: ${JSON.stringify(rpcResponse)}`,
       "success",
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error handling message:", error);
-    const errorMessage =
-      error instanceof Error ? error.message : "Unknown error occurred";
+    const errorMessage = String(error?.message ?? error);
     addLog(`❌ Error processing request: ${errorMessage}`, "error");
     const errorResponse = {
       jsonrpc: "2.0",
