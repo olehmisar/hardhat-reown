@@ -1,20 +1,78 @@
 import { createAppKit } from "@reown/appkit";
 import type { AppKitNetwork } from "@reown/appkit/networks";
-import { JsonRpcRequest } from "hardhat/types/providers";
+import type { JsonRpcRequest } from "hardhat/types/providers";
 import * as networks from "viem/chains";
 import { SERVER_PORT } from "../port.js";
 
 const logList = document.getElementById("log")!;
-const connectionStatus = document.querySelectorAll(
-  ".connection-status",
-) as NodeListOf<HTMLElement>;
+const connectionStatus = document.getElementById("connectionStatus")!;
+const statusIndicator = document.getElementById("statusIndicator")!;
 const ws = new WebSocket(`ws://localhost:${SERVER_PORT}`);
 
-function addLog(text: string) {
+// Enhanced logging with timestamps and better formatting
+function addLog(
+  text: string,
+  type: "info" | "success" | "error" | "warning" = "info",
+) {
   const li = document.createElement("li");
-  li.textContent = text;
+  li.className = `log-entry log-${type}`;
+
+  const timestamp = new Date().toLocaleTimeString();
+  const timestampEl = document.createElement("span");
+  timestampEl.className = "log-timestamp";
+  timestampEl.textContent = timestamp;
+
+  const messageEl = document.createElement("span");
+  messageEl.className = "log-message";
+  messageEl.textContent = text;
+
+  li.appendChild(timestampEl);
+  li.appendChild(messageEl);
+
+  // Add appropriate icon based on type
+  const icon = document.createElement("i");
+  icon.className = getLogIcon(type);
+  li.insertBefore(icon, timestampEl);
+
   logList.appendChild(li);
-  li.scrollIntoView();
+  li.scrollIntoView({ behavior: "smooth" });
+
+  // Add entrance animation
+  li.style.opacity = "0";
+  li.style.transform = "translateY(20px)";
+  setTimeout(() => {
+    li.style.transition = "all 0.3s ease";
+    li.style.opacity = "1";
+    li.style.transform = "translateY(0)";
+  }, 10);
+}
+
+function getLogIcon(type: string): string {
+  switch (type) {
+    case "success":
+      return "fas fa-check-circle";
+    case "error":
+      return "fas fa-exclamation-circle";
+    case "warning":
+      return "fas fa-exclamation-triangle";
+    default:
+      return "fas fa-info-circle";
+  }
+}
+
+// Update connection status with animations
+function updateConnectionStatus(connected: boolean) {
+  if (connected) {
+    connectionStatus.style.display = "flex";
+    connectionStatus.className = "connection-status connected";
+    connectionStatus.innerHTML = "Hardhat connected";
+    statusIndicator.className = "status-indicator connected";
+  } else {
+    connectionStatus.style.display = "flex";
+    connectionStatus.className = "connection-status";
+    connectionStatus.innerHTML = "Hardhat disconnected";
+    statusIndicator.className = "status-indicator disconnected";
+  }
 }
 
 function lazyValue<T>(f: () => T): () => T {
@@ -38,7 +96,7 @@ const getModal = lazyValue(async () => {
   const metadata = {
     name: "Hardhat Reown",
     description: "Hardhat Reown connection",
-    url: `http://localhost:${SERVER_PORT}`, // origin must match your domain & subdomain
+    url: window.location.origin,
     icons: ["https://avatars.githubusercontent.com/u/179229932"],
   };
 
@@ -80,21 +138,20 @@ async function handleRpcRequest(req: JsonRpcRequest) {
 }
 
 ws.onopen = () => {
-  addLog("Connected to WebSocket server");
-  connectionStatus.forEach((status) => {
-    status.style.display = "none";
-  });
+  addLog("🔗 Connected to WebSocket server", "success");
+  updateConnectionStatus(true);
+  addLog("🚀 Ready to process blockchain requests", "info");
 };
 
 ws.onmessage = async (event) => {
   const data = event.data;
-  addLog(`Received request: ${data}`);
+  addLog(`📨 Received request: ${data}`, "info");
 
   let rpcRequest;
   try {
     rpcRequest = JSON.parse(data);
   } catch (error) {
-    addLog(`Received an invalid JSON-RPC request: ${data}`);
+    addLog(`❌ Invalid JSON-RPC request: ${data}`, "error");
     return;
   }
 
@@ -104,12 +161,19 @@ ws.onmessage = async (event) => {
         `Invalid JSON-RPC request: ${JSON.stringify(rpcRequest)}`,
       );
     }
-    addLog("Waiting for the response from your wallet...");
+
+    addLog(`⏳ Processing ${rpcRequest.method} request...`, "info");
     const rpcResponse = await handleRpcRequest(rpcRequest);
     ws.send(JSON.stringify(rpcResponse));
-    addLog(`Sent JSON-RPC response ${JSON.stringify(rpcResponse)}`);
+    addLog(
+      `✅ Response sent for ${rpcRequest.method}: ${JSON.stringify(rpcResponse)}`,
+      "success",
+    );
   } catch (error) {
     console.error("Error handling message:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Unknown error occurred";
+    addLog(`❌ Error processing request: ${errorMessage}`, "error");
     const errorResponse = {
       jsonrpc: "2.0",
       error: { code: -32700, message: "Parse error" },
@@ -122,13 +186,35 @@ ws.onmessage = async (event) => {
 };
 
 ws.onclose = () => {
-  addLog("Disconnected from WebSocket server");
-  connectionStatus.forEach((status) => {
-    status.style.display = "block";
-  });
+  addLog("🔌 Disconnected from WebSocket server", "warning");
+  updateConnectionStatus(false);
 };
 
 ws.onerror = (error) => {
   console.error("WebSocket error:", error);
-  addLog("WebSocket error occurred");
+  addLog("⚠️ WebSocket connection error occurred", "error");
+  updateConnectionStatus(false);
 };
+
+// Add keyboard shortcuts and enhanced interactions
+document.addEventListener("keydown", (event) => {
+  if (event.ctrlKey || event.metaKey) {
+    switch (event.key) {
+      case "k":
+        event.preventDefault();
+        clearLog();
+        break;
+    }
+  }
+});
+
+// Clear log function
+function clearLog() {
+  logList.innerHTML = "";
+  addLog("🧹 Log cleared", "info");
+}
+
+// Add welcome message
+addLog("🎉 Welcome to Hardhat Reown.", "success");
+addLog("💡 Connect your wallet to start interacting with Hardhat", "info");
+addLog("⌨️ Press Ctrl+K to clear log", "info");
