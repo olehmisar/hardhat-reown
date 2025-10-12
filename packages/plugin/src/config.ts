@@ -65,7 +65,18 @@ export async function resolvePluginConfig(
   userConfig: HardhatUserConfig,
   partiallyResolvedConfig: HardhatConfig,
 ): Promise<HardhatConfig> {
-  return {
-    ...partiallyResolvedConfig,
-  };
+  if (userConfig.networks === undefined) {
+    return partiallyResolvedConfig;
+  }
+
+  const resolvedConfigCopy = { ...partiallyResolvedConfig };
+
+  for (const [networkName, network] of Object.entries(
+    resolvedConfigCopy.networks,
+  )) {
+    network.reownAccounts =
+      userConfig.networks[networkName].reownAccounts ?? false;
+  }
+
+  return resolvedConfigCopy;
 }

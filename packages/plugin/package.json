@@ -1,11 +1,15 @@
 {
   "name": "hardhat-reown",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Hardhat Reown plugin",
   "type": "module",
   "types": "dist/src/index.d.ts",
   "exports": {
     ".": "./dist/src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/olehmisar/hardhat-reown"
   },
   "keywords": [
     "ethereum",

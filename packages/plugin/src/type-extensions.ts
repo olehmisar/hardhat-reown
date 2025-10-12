@@ -1,18 +1,18 @@
 import "hardhat/types/config";
 declare module "hardhat/types/config" {
   interface HttpNetworkUserConfig {
-    readonly reownAccounts?: boolean;
+    reownAccounts?: boolean;
   }
 
   interface EdrNetworkUserConfig {
-    readonly reownAccounts?: boolean;
+    reownAccounts?: boolean;
   }
 
   interface HttpNetworkConfig {
-    readonly reownAccounts: boolean;
+    reownAccounts: boolean;
   }
 
   interface EdrNetworkConfig {
-    readonly reownAccounts: boolean;
+    reownAccounts: boolean;
   }
 }
