@@ -4,26 +4,9 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import express from "express";
+import { JsonRpcRequest, JsonRpcResponse } from "hardhat/types/providers";
 import { WebSocket, WebSocketServer } from "ws";
 import { SERVER_PORT } from "./port.js";
-
-// Type definitions moved into this file
-interface JsonRpcRequest {
-  jsonrpc: "2.0";
-  method: string;
-  params: any[];
-  id: number;
-}
-
-interface JsonRpcResponse {
-  jsonrpc: "2.0";
-  result?: any;
-  error?: {
-    code: number;
-    message: string;
-  };
-  id: number;
-}
 
 const app = express();
 const server = http.createServer(app);
@@ -33,7 +16,7 @@ const port = SERVER_PORT;
 
 let activeClient: WebSocket | null = null;
 const pendingRequests = new Map<
-  number,
+  JsonRpcRequest["id"],
   { resolve: (value: any) => void; reject: (reason?: any) => void }
 >();
 
@@ -56,10 +39,10 @@ app.get("/", (req, res) => {
  */
 async function sendJsonRpcRequest(
   req: Omit<JsonRpcRequest, "id">,
-): Promise<JsonRpcResponse["result"]> {
+): Promise<JsonRpcResponse> {
   if (!activeClient || activeClient.readyState !== WebSocket.OPEN) {
     console.log(
-      "Waiting for a Reown tab to connect. Visit http://localhost:9293 to connect.",
+      `Waiting for a Reown tab to connect. Visit http://localhost:${SERVER_PORT} to connect.`,
     );
     while (!activeClient || activeClient.readyState !== WebSocket.OPEN) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -69,7 +52,7 @@ async function sendJsonRpcRequest(
   const id = Date.now();
   const requestWithId: JsonRpcRequest = { ...req, id };
 
-  return new Promise<JsonRpcResponse["result"]>((resolve, reject) => {
+  return new Promise<JsonRpcResponse>((resolve, reject) => {
     pendingRequests.set(id, { resolve, reject });
     activeClient!.send(JSON.stringify(requestWithId));
   });
@@ -87,9 +70,9 @@ wss.on("connection", (ws) => {
   ws.on("message", (message) => {
     try {
       const response: JsonRpcResponse = JSON.parse(message.toString());
-      const handler = pendingRequests.get(response.id);
+      const handler = pendingRequests.get(response.id!);
       if (handler) {
-        pendingRequests.delete(response.id);
+        pendingRequests.delete(response.id!);
         handler.resolve(response);
       }
     } catch (error) {

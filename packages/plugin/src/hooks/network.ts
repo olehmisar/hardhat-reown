@@ -97,12 +97,12 @@ async function validateReownChainId(networkConnection: NetworkConnection<any>) {
 
   const reownChainId = BigInt(
     (
-      await sendJsonRpcRequestToReown({
+      (await sendJsonRpcRequestToReown({
         jsonrpc: "2.0",
         id: crypto.randomUUID(),
         method: "eth_chainId",
         params: [],
-      })
+      })) as any
     ).result,
   );
   const hardhatChainIdHex = await networkConnection.provider.request({
@@ -124,12 +124,12 @@ async function validateReownChainId(networkConnection: NetworkConnection<any>) {
 
   const reownChainIdAfterUpdate = BigInt(
     (
-      await sendJsonRpcRequestToReown({
+      (await sendJsonRpcRequestToReown({
         jsonrpc: "2.0",
         id: crypto.randomUUID(),
         method: "eth_chainId",
         params: [],
-      })
+      })) as any
     ).result,
   );
 
