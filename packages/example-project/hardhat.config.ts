@@ -6,7 +6,7 @@ import { parseEther } from "viem";
 export default {
   plugins: [myPlugin, toolboxViem],
   tasks: [
-    task("should-work")
+    task("send-transaction")
       .setAction(async () => ({
         default: async (_args, hre) => {
           const { viem } = await hre.network.connect();
