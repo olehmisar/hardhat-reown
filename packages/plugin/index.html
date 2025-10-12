@@ -16,7 +16,7 @@
         padding: 8px;
         border-bottom: 1px solid #ddd;
       }
-      #connection-status {
+      .connection-status {
         font-size: 2em;
         font-weight: bold;
         color: red;
@@ -29,12 +29,13 @@
     <h1>Browser Client</h1>
     <appkit-button></appkit-button>
     <p>Waiting for JSON-RPC requests from the server...</p>
-    <div id="connection-status">Connection Closed!</div>
+    <div class="connection-status">Connection Closed!</div>
     <ul id="log"></ul>
+    <div class="connection-status">Connection Closed!</div>
 
     <script type="module">
       const logList = document.getElementById("log");
-      const connectionStatus = document.getElementById("connection-status");
+      const connectionStatus = document.querySelectorAll(".connection-status");
       const ws = new WebSocket(`ws://localhost:${SERVER_PORT}`);
 
       function addLog(text) {
@@ -109,7 +110,9 @@
 
       ws.onopen = () => {
         addLog("Connected to WebSocket server");
-        connectionStatus.style.display = "none";
+        connectionStatus.forEach((status) => {
+          status.style.display = "none";
+        });
       };
 
       ws.onmessage = async (event) => {
@@ -149,7 +152,9 @@
 
       ws.onclose = () => {
         addLog("Disconnected from WebSocket server");
-        connectionStatus.style.display = "block";
+        connectionStatus.forEach((status) => {
+          status.style.display = "block";
+        });
       };
 
       ws.onerror = (error) => {
