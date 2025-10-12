@@ -45,8 +45,8 @@
   "devDependencies": {
     "@eslint/js": "^9.35.0",
     "@nomicfoundation/hardhat-node-test-reporter": "^3.0.0",
-    "@reown/appkit": "^1.8.6",
-    "@reown/appkit-adapter-wagmi": "^1.8.9",
+    "@reown/appkit": "1.8.4",
+    "@reown/appkit-adapter-wagmi": "1.8.4",
     "@tsconfig/node22": "^22.0.2",
     "@types/express": "^5.0.3",
     "@types/lodash-es": "^4.17.12",

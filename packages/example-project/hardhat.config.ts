@@ -20,7 +20,9 @@ export default {
             to: alice.account.address,
             value: parseEther("0.001"),
           });
-          console.log("hash", hash);
+          console.log(
+            `https://${alice.chain.blockExplorers?.default}/tx/${hash}`,
+          );
         },
       }))
       .build(),
