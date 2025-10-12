@@ -18,11 +18,9 @@ export default {
           const alice = accounts[0];
           const hash = await alice.sendTransaction({
             to: alice.account.address,
-            value: parseEther("0.001"),
+            value: parseEther("0.00001"),
           });
-          console.log(
-            `https://${alice.chain.blockExplorers?.default}/tx/${hash}`,
-          );
+          console.log(`${alice.chain.blockExplorers?.default.url}/tx/${hash}`);
         },
       }))
       .build(),
