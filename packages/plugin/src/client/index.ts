@@ -114,7 +114,9 @@ const getModal = lazyValue(async () => {
   const modal = createAppKit({
     adapters: [wagmiAdapter],
     networks,
-    enableCoinbase: true,
+    featuredWalletIds: [
+      "fd20dc426fb37566d803205b19bbc1d4096b248ac04548e3cfb6b3a38bd033aa", // show coinbase wallet option by default
+    ],
     metadata,
     projectId,
     features: {
