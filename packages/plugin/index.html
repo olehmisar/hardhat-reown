@@ -23,13 +23,21 @@
         display: none; /* Initially hidden */
         margin-top: 20px;
       }
+
+      header {
+        position: sticky;
+        top: 0;
+        background: white;
+        border-bottom: 2px solid #ddd;
+      }
     </style>
   </head>
   <body>
-    <h1>Browser Client</h1>
-    <appkit-button></appkit-button>
-    <p>Waiting for JSON-RPC requests from the server...</p>
-    <div class="connection-status">Connection Closed!</div>
+    <header>
+      <h1>Hardhat Reown</h1>
+      <appkit-button></appkit-button>
+      <div class="connection-status">Connection Closed!</div>
+    </header>
     <ul id="log"></ul>
     <div class="connection-status">Connection Closed!</div>
 
