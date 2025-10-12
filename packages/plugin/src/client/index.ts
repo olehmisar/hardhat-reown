@@ -31,8 +31,8 @@ function lazyValue<T>(f: () => T): () => T {
 
 const reownNamespace = "eip155";
 const getModal = lazyValue(async () => {
-  // 1. Get projectId from https://dashboard.reown.com
-  const projectId = "e1dda83ea916032db5f7b95126ca699c";
+  // 1. Get from https://dashboard.reown.com
+  const projectId = "d9ff1b9537a9676b5529031726395ebf";
 
   // 2. Create your application's metadata object
   const metadata = {
