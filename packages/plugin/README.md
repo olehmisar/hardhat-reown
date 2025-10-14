@@ -1,10 +1,6 @@
 # `hardhat-reown`
 
-This is a plugin that allows you to use the reown.com modal with Hardhat. The use cases include:
-
-1. Using a multisig (e.g., <https://safe.global>)
-2. Using a smart account (e.g., <https://wallet.coinbase.com>)
-3. Use any other wallet supported by Reown: Metamask, Rainbow, Phantom etc.
+This is a plugin that allows you to use the reown.com modal with Hardhat. You can now use any wallet supported by Reown to deploy your contracts: Metamask, Rainbow, Phantom etc. Note that only EOA accounts can be used to deploy but you can use both EOA and smart accounts to send regular transactions.
 
 ## Installation
 
