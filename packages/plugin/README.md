@@ -13,10 +13,10 @@ npm add --save-dev hardhat-reown
 In your `hardhat.config.ts` file, import the plugin and add it to the `plugins` array:
 
 ```ts
-import hardhatReown from "hardhat-reown";
+import hardhatReownPlugin from "hardhat-reown";
 
 export default {
-  plugins: [hardhatReown],
+  plugins: [hardhatReownPlugin],
 };
 ```
 
@@ -25,10 +25,10 @@ export default {
 You can configure the plugin by using the `reownAccounts` field in your Hardhat network config for each network separately. For example, you can have the following configuration:
 
 ```ts
-import hardhatReown from "hardhat-reown";
+import hardhatReownPlugin from "hardhat-reown";
 
 export default {
-  plugins: [hardhatReown],
+  plugins: [hardhatReownPlugin],
   networks: {
     mainnet: {
       url: "https://eth.drpc.org",

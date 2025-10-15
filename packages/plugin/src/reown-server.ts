@@ -5,7 +5,6 @@ import { fileURLToPath } from "node:url";
 
 import express from "express";
 import { JsonRpcRequest, JsonRpcResponse } from "hardhat/types/providers";
-import open from "open";
 import { WebSocket, WebSocketServer } from "ws";
 import { SERVER_PORT } from "./port.js";
 
@@ -46,7 +45,6 @@ async function sendJsonRpcRequest(
     console.log(
       `Waiting for a Reown tab to connect. Visit ${browserUrl} to connect.`,
     );
-    await open(browserUrl);
     while (!activeClient || activeClient.readyState !== WebSocket.OPEN) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
